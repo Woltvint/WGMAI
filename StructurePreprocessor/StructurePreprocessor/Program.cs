@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -12,10 +13,11 @@ namespace StructurePreprocessor
         {
             List<NbtFile> structures = new List<NbtFile>();
             List<string> blockPalette = new List<string>();
-            List<List<block>> processedStructures = new List<List<block>>();
+            List<Structure> processedStructures = new List<Structure>();
 
             if (!Directory.Exists("input"))
             {
+                Console.WriteLine("input folder not found");
                 return;
             }
 
@@ -60,11 +62,11 @@ namespace StructurePreprocessor
             {
                 NbtList size = structure.RootTag.Get<NbtList>("size");
 
-                List<block> bs = new List<block>();
-
                 NbtList palette = structure.RootTag.Get<NbtList>("palette");
 
                 NbtList blocks = structure.RootTag.Get<NbtList>("blocks");
+
+                Structure struc = new Structure(size.Get<NbtInt>(0).Value, size.Get<NbtInt>(1).Value, size.Get<NbtInt>(2).Value);
 
                 foreach (NbtCompound b in blocks)
                 {
@@ -76,12 +78,13 @@ namespace StructurePreprocessor
                         string name = palette.Get<NbtCompound>(state).Get<NbtString>("Name").Value;
                         if (blockPalette[a] == name)
                         {
-                            bs.Add(new block(a, pos.Get<NbtInt>(0).Value, pos.Get<NbtInt>(1).Value, pos.Get<NbtInt>(2).Value));
+                            struc.blocks.Add(new Block(a, pos.Get<NbtInt>(0).Value, pos.Get<NbtInt>(1).Value, pos.Get<NbtInt>(2).Value));
                         }
                     }
                 }
 
-                processedStructures.Add(bs);
+                processedStructures.Add(struc);
+
             }
 
             JsonSerializerOptions o = new JsonSerializerOptions();
@@ -99,14 +102,31 @@ namespace StructurePreprocessor
         }
     }
 
-    public class block
+    public class Structure
+    {
+        public int sizeX { get; set; }
+        public int sizeY { get; set; }
+        public int sizeZ { get; set; }
+
+        public List<Block> blocks { get; set; }
+
+        public Structure(int _sizeX, int _sizeY, int _sizeZ)
+        {
+            sizeX = _sizeX;
+            sizeY = _sizeY;
+            sizeZ = _sizeZ;
+            blocks = new List<Block>();
+        }
+    }
+
+    public class Block
     {
         public int posX { get; set; }
         public int posY { get; set; }
         public int posZ { get; set; }
         public int ID { get; set; }
 
-        public block(int _id, int px, int py, int pz)
+        public Block(int _id, int px, int py, int pz)
         {
             posX = px;
             posY = py;
