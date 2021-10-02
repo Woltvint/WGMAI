@@ -5,8 +5,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SharpNeatLib" Version="2.4.4" />
-  </ItemGroup>
-
 </Project>

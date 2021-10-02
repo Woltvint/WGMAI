@@ -73,14 +73,14 @@ namespace StructurePreprocessor
                     int state = b.Get<NbtInt>("state").Value;
                     NbtList pos = b.Get<NbtList>("pos");
 
-                    for (int a = 0; a < blockPalette.Count; a++)
-                    {
+                    /*for (int a = 0; a < blockPalette.Count; a++)
+                    {*/
                         string name = palette.Get<NbtCompound>(state).Get<NbtString>("Name").Value;
-                        if (blockPalette[a] == name)
-                        {
-                            struc.blocks.Add(new Block(a, pos.Get<NbtInt>(0).Value, pos.Get<NbtInt>(1).Value, pos.Get<NbtInt>(2).Value));
-                        }
-                    }
+                        /*if (blockPalette[a] == name)
+                        {*/
+                            struc.blocks.Add(new Block(name.Replace("minecraft:",""), pos.Get<NbtInt>(0).Value, pos.Get<NbtInt>(1).Value, pos.Get<NbtInt>(2).Value));
+                        /*}
+                    }*/
                 }
 
                 processedStructures.Add(struc);
@@ -124,9 +124,9 @@ namespace StructurePreprocessor
         public int posX { get; set; }
         public int posY { get; set; }
         public int posZ { get; set; }
-        public int ID { get; set; }
+        public string ID { get; set; }
 
-        public Block(int _id, int px, int py, int pz)
+        public Block(string _id, int px, int py, int pz)
         {
             posX = px;
             posY = py;
